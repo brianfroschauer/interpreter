@@ -1,4 +1,4 @@
-package interprete.visitor;
+package interprete;
 
 import parser.ASTNode;
 import parser.BinaryOperation;
