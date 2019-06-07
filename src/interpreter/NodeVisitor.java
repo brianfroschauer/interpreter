@@ -1,4 +1,4 @@
-package interprete;
+package interpreter;
 
 import parser.BinaryOperation;
 import parser.Number;

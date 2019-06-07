@@ -1,4 +1,4 @@
-import interprete.visitor.Interpreter;
+import interpreter.Interpreter;
 import lexer.Lexer;
 import lexer.Token;
 import parser.ASTNode;

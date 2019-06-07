@@ -1,6 +1,6 @@
 package parser;
 
-import interprete.visitor.NodeVisitable;
+import interpreter.NodeVisitable;
 import lexer.Token;
 
 /**

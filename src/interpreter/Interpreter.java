@@ -1,4 +1,4 @@
-package interprete;
+package interpreter;
 
 import parser.ASTNode;
 import parser.BinaryOperation;
