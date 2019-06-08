@@ -22,7 +22,7 @@ public class Lexer {
 
         while (current != null) {
             if (Character.isSpaceChar(current)) {
-                consumeSpaces();
+                skipWitheSpaces();
             } else if (Character.isDigit(current)) {
                 tokens.add(new Token(Kind.INTEGER, integer()));
             } else if (current == '+') {
@@ -43,6 +43,17 @@ public class Lexer {
             } else if (current == ')') {
                 tokens.add(new Token(Kind.RPAREN, ")"));
                 advance();
+            } else if (current == '=') {
+                tokens.add(new Token(Kind.ASSIGN, "="));
+                advance();
+            } else if (current == ';') {
+                tokens.add(new Token(Kind.SEMI, ";"));
+                advance();
+            } else if (current == '"' || current == '\'') {
+                tokens.add(new Token(Kind.STRING, consumeString(current)));
+                advance();
+            } else if (Character.isAlphabetic(current)) {
+                tokens.add(identifierOrKeyword());
             } else {
                 throw new RuntimeException("Unrecognized token: " + current);
             }
@@ -63,9 +74,43 @@ public class Lexer {
         }
     }
 
-    private void consumeSpaces() {
+    private void skipWitheSpaces() {
         while (current != null && Character.isSpaceChar(current)) {
             advance();
+        }
+    }
+
+    private String consumeString(char type) {
+        final StringBuilder sb = new StringBuilder();
+        advance();
+        while (current != null && current != type) {
+            sb.append(current);
+            advance();
+        }
+
+        return sb.toString();
+    }
+
+    private Token identifierOrKeyword() {
+        final StringBuilder sb = new StringBuilder();
+        while (current != null && Character.isLetterOrDigit(current)) {
+            sb.append(current);
+            advance();
+        }
+
+        final String result = sb.toString();
+
+        if (result.equals("let")) return new Token(Kind.LET, result);
+        else return new Token(Kind.ID, result);
+    }
+
+    private Character peek() {
+        final int peekPos = pos + 1;
+
+        if (peekPos > input.length() - 1) {
+            return null;
+        } else {
+            return input.charAt(peekPos);
         }
     }
 

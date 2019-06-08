@@ -7,11 +7,21 @@ package lexer;
 public enum Kind {
 
     INTEGER,
+    STRING,
+
     PLUS,
     MINUS,
     MUL,
     DIV,
+
     LPAREN,
     RPAREN,
+
+    ASSIGN,
+    SEMI,
+
+    LET,
+    ID,
+
     EOF
 }
