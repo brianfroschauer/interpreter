@@ -49,7 +49,7 @@ public class InterpreterImpl implements Interpreter, NodeVisitor {
         final String varName = node.getValue();
         final Integer val = symbolTable.lookup(varName);
         if (val != null) stack.push(val);
-        else throw new RuntimeException("Undeclared variable");
+        else throw new RuntimeException("Null pointer exception: " + varName);
     }
 
     @Override
