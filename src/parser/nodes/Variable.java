@@ -1,16 +1,16 @@
-package parser;
+package parser.nodes;
 
 import interpreter.NodeVisitor;
 
 /**
  * Author: brianfroschauer
- * Date: 2019-06-06
+ * Date: 2019-06-07
  */
-public class Number implements ASTNode {
+public class Variable implements ASTNode {
 
     private final String value;
 
-    Number(String value) {
+    public Variable(String value) {
         this.value = value;
     }
 
@@ -21,6 +21,6 @@ public class Number implements ASTNode {
 
     @Override
     public void accept(NodeVisitor visitor) {
-        visitor.visitNumber(this);
+        visitor.visitVariable(this);
     }
 }

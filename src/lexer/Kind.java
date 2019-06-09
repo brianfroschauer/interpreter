@@ -6,8 +6,11 @@ package lexer;
  */
 public enum Kind {
 
-    NUMBER,
-    STRING,
+    NUMBER_LITERAL,
+    STRING_LITERAL,
+
+    NUMBER_DATATYPE,
+    STRING_DATATYPE,
 
     PLUS,
     MINUS,
@@ -18,7 +21,8 @@ public enum Kind {
     RPAREN,
 
     ASSIGN,
-    SEMI,
+    SEMICOLON,
+    COLON,
 
     LET,
     ID,

@@ -24,10 +24,6 @@ public class LexerImpl implements Lexer {
         while (current != null) {
             if (Character.isSpaceChar(current)) {
                 skipWitheSpaces();
-            } else if (Character.isDigit(current)) {
-                tokens.add(new TokenImpl(Kind.NUMBER, integer()));
-            } else if (Character.isAlphabetic(current)) {
-                tokens.add(identifierOrKeyword());
             } else if (current == '+') {
                 tokens.add(new TokenImpl(Kind.PLUS, "+"));
                 advance();
@@ -50,11 +46,18 @@ public class LexerImpl implements Lexer {
                 tokens.add(new TokenImpl(Kind.RPAREN, ")"));
                 advance();
             } else if (current == ';') {
-                tokens.add(new TokenImpl(Kind.SEMI, ";"));
+                tokens.add(new TokenImpl(Kind.SEMICOLON, ";"));
                 advance();
+            } else if (current == ':') {
+                tokens.add(new TokenImpl(Kind.COLON, ":"));
+                advance();
+            } else if (Character.isDigit(current)) {
+                tokens.add(new TokenImpl(Kind.NUMBER_LITERAL, integer()));
             } else if (current == '"' || current == '\'') {
-                tokens.add(new TokenImpl(Kind.STRING, consumeString(current)));
+                tokens.add(new TokenImpl(Kind.STRING_LITERAL, consumeString(current)));
                 advance();
+            } else if (Character.isAlphabetic(current)) {
+                tokens.add(identifierOrKeyword());
             } else {
                 throw new RuntimeException("Unrecognized token: " + current);
             }
@@ -110,6 +113,8 @@ public class LexerImpl implements Lexer {
 
         if (result.equals("let")) return new TokenImpl(Kind.LET, result);
         if (result.equals("print")) return new TokenImpl(Kind.PRINT, result);
+        if (result.equals("number")) return new TokenImpl(Kind.NUMBER_DATATYPE, result);
+        if (result.equals("string")) return new TokenImpl(Kind.STRING_DATATYPE, result);
 
         else return new TokenImpl(Kind.ID, result);
     }

@@ -1,18 +1,18 @@
-package parser;
+package parser.nodes;
 
 import interpreter.NodeVisitor;
 
 /**
  * Author: brianfroschauer
- * Date: 2019-06-07
+ * Date: 2019-06-06
  */
-public class Assign implements BinaryNode {
+public class BinaryOperation implements BinaryNode {
 
     private final String value;
     private final ASTNode left;
     private final ASTNode right;
 
-    Assign(String value, ASTNode left, ASTNode right) {
+    public BinaryOperation(String value, ASTNode left, ASTNode right) {
         this.value = value;
         this.left = left;
         this.right = right;
@@ -35,6 +35,6 @@ public class Assign implements BinaryNode {
 
     @Override
     public void accept(NodeVisitor visitor) {
-        visitor.visitAssign(this);
+        visitor.visitBinaryOperation(this);
     }
 }

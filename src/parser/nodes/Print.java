@@ -1,4 +1,4 @@
-package parser;
+package parser.nodes;
 
 import interpreter.NodeVisitor;
 
@@ -10,7 +10,7 @@ public class Print implements ASTNode {
 
     private final ASTNode node;
 
-    Print(ASTNode node) {
+    public Print(ASTNode node) {
         this.node = node;
     }
 

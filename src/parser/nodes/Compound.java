@@ -1,4 +1,4 @@
-package parser;
+package parser.nodes;
 
 import interpreter.NodeVisitor;
 
@@ -12,7 +12,7 @@ public class Compound implements ASTNode {
 
     private final List<ASTNode> children;
 
-    Compound(List<ASTNode> children) {
+    public Compound(List<ASTNode> children) {
         this.children = children;
     }
 

@@ -1,7 +1,7 @@
 package interpreter;
 
-import parser.*;
-import parser.Number;
+import parser.nodes.*;
+import parser.nodes.NumberLiteral;
 
 /**
  * Author: brianfroschauer
@@ -9,11 +9,11 @@ import parser.Number;
  */
 public interface NodeVisitor {
 
-    void visitNumber(Number node);
-    void visitBinaryOperation(BinaryOperation node);
     void visitCompound(Compound node);
-    void visitAssign(Assign node);
+    void visitAssignation(Assignation node);
     void visitDeclaration(Declaration node);
-    void visitVar(Var node);
+    void visitVariable(Variable node);
+    void visitBinaryOperation(BinaryOperation node);
+    void visitNumber(NumberLiteral node);
     void visitPrint(Print node);
 }
