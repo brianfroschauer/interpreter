@@ -1,7 +1,6 @@
 package parser;
 
 import interpreter.NodeVisitor;
-import lexer.Token;
 
 /**
  * Author: brianfroschauer
@@ -9,19 +8,24 @@ import lexer.Token;
  */
 public class BinaryOperation implements NonTerminalNode {
 
-    private final Token token;
+    private String operation;
     private final ASTNode left;
     private final ASTNode right;
 
-    public BinaryOperation(Token token, ASTNode left, ASTNode right) {
-        this.token = token;
+    BinaryOperation(String operation, ASTNode left, ASTNode right) {
+        this.operation = operation;
         this.left = left;
         this.right = right;
     }
 
     @Override
-    public Token getToken() {
-        return token;
+    public void accept(NodeVisitor visitor) {
+        visitor.visitBinaryOperation(this);
+    }
+
+    @Override
+    public String getValue() {
+        return operation;
     }
 
     public ASTNode getLeft() {
@@ -30,10 +34,5 @@ public class BinaryOperation implements NonTerminalNode {
 
     public ASTNode getRight() {
         return right;
-    }
-
-    @Override
-    public void accept(NodeVisitor visitor) {
-        visitor.visitBinaryOperation(this);
     }
 }

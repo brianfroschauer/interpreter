@@ -1,7 +1,6 @@
 package parser;
 
 import interpreter.NodeVisitable;
-import lexer.Token;
 
 /**
  * Author: brianfroschauer
@@ -9,5 +8,5 @@ import lexer.Token;
  */
 public interface ASTNode extends NodeVisitable {
 
-    Token getToken();
+    String getValue();
 }

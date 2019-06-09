@@ -1,7 +1,6 @@
 package parser;
 
 import interpreter.NodeVisitor;
-import lexer.Token;
 
 /**
  * Author: brianfroschauer
@@ -9,19 +8,24 @@ import lexer.Token;
  */
 public class Assign implements NonTerminalNode {
 
-    private final Token token;
+    private final String value;
     private final ASTNode left;
     private final ASTNode right;
 
-    public Assign(Token token, ASTNode left, ASTNode right) {
-        this.token = token;
+    Assign(String value, ASTNode left, ASTNode right) {
+        this.value = value;
         this.left = left;
         this.right = right;
     }
 
     @Override
-    public Token getToken() {
-        return token;
+    public void accept(NodeVisitor visitor) {
+        visitor.visitAssign(this);
+    }
+
+    @Override
+    public String getValue() {
+        return value;
     }
 
     public ASTNode getLeft() {
@@ -30,10 +34,5 @@ public class Assign implements NonTerminalNode {
 
     public ASTNode getRight() {
         return right;
-    }
-
-    @Override
-    public void accept(NodeVisitor visitor) {
-        visitor.visitAssign(this);
     }
 }

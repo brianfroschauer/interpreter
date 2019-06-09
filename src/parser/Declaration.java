@@ -1,7 +1,6 @@
 package parser;
 
 import interpreter.NodeVisitor;
-import lexer.Token;
 
 /**
  * Author: brianfroschauer
@@ -9,22 +8,15 @@ import lexer.Token;
  */
 public class Declaration implements TerminalNode {
 
-    private final Token token;
-    private final ASTNode var;
+    private final String value;
 
-    public Declaration(Token token, ASTNode var) {
-        this.token = token;
-        this.var = var;
+    Declaration(String value) {
+        this.value = value;
     }
 
     @Override
     public String getValue() {
-        return var.getToken().getValue();
-    }
-
-    @Override
-    public Token getToken() {
-        return token;
+        return value;
     }
 
     @Override

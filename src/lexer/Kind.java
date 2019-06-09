@@ -6,7 +6,7 @@ package lexer;
  */
 public enum Kind {
 
-    INTEGER,
+    NUMBER,
     STRING,
 
     PLUS,
@@ -22,6 +22,8 @@ public enum Kind {
 
     LET,
     ID,
+
+    PRINT,
 
     EOF
 }

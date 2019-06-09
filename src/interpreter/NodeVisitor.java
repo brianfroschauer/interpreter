@@ -15,4 +15,5 @@ public interface NodeVisitor {
     void visitAssign(Assign node);
     void visitDeclaration(Declaration node);
     void visitVar(Var node);
+    void visitPrint(Print node);
 }

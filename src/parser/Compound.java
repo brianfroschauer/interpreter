@@ -1,7 +1,6 @@
 package parser;
 
 import interpreter.NodeVisitor;
-import lexer.Token;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ public class Compound implements NonTerminalNode {
 
     private final List<ASTNode> children;
 
-    public Compound(List<ASTNode> children) {
+    Compound(List<ASTNode> children) {
         this.children = children;
     }
 
@@ -22,12 +21,12 @@ public class Compound implements NonTerminalNode {
     }
 
     @Override
-    public Token getToken() {
-        return null;
+    public void accept(NodeVisitor visitor) {
+        visitor.visitCompound(this);
     }
 
     @Override
-    public void accept(NodeVisitor visitor) {
-        visitor.visitCompound(this);
+    public String getValue() {
+        return null;
     }
 }
