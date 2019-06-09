@@ -6,9 +6,9 @@ import interpreter.NodeVisitor;
  * Author: brianfroschauer
  * Date: 2019-06-06
  */
-public class BinaryOperation implements NonTerminalNode {
+public class BinaryOperation implements ASTNode {
 
-    private String operation;
+    private final String operation;
     private final ASTNode left;
     private final ASTNode right;
 

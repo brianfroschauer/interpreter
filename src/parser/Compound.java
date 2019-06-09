@@ -8,7 +8,7 @@ import java.util.List;
  * Author: brianfroschauer
  * Date: 2019-06-07
  */
-public class Compound implements NonTerminalNode {
+public class Compound implements ASTNode {
 
     private final List<ASTNode> children;
 

@@ -6,7 +6,7 @@ import interpreter.NodeVisitor;
  * Author: brianfroschauer
  * Date: 2019-06-09
  */
-public class Print implements TerminalNode {
+public class Print implements ASTNode {
 
     private final ASTNode node;
 

@@ -6,7 +6,7 @@ import interpreter.NodeVisitor;
  * Author: brianfroschauer
  * Date: 2019-06-07
  */
-public class Var implements TerminalNode {
+public class Var implements ASTNode {
 
     private final String value;
 

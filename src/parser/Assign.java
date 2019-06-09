@@ -6,7 +6,7 @@ import interpreter.NodeVisitor;
  * Author: brianfroschauer
  * Date: 2019-06-07
  */
-public class Assign implements NonTerminalNode {
+public class Assign implements ASTNode {
 
     private final String value;
     private final ASTNode left;
