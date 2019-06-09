@@ -21,12 +21,12 @@ public class Compound implements ASTNode {
     }
 
     @Override
-    public void accept(NodeVisitor visitor) {
-        visitor.visitCompound(this);
+    public String getValue() {
+        return null;
     }
 
     @Override
-    public String getValue() {
-        return null;
+    public void accept(NodeVisitor visitor) {
+        visitor.visitCompound(this);
     }
 }

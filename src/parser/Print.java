@@ -20,7 +20,7 @@ public class Print implements ASTNode {
 
     @Override
     public String getValue() {
-        return "print";
+        return null;
     }
 
     @Override

@@ -6,7 +6,7 @@ import interpreter.NodeVisitor;
  * Author: brianfroschauer
  * Date: 2019-06-07
  */
-public class Assign implements ASTNode {
+public class Assign implements BinaryNode {
 
     private final String value;
     private final ASTNode left;
@@ -19,20 +19,22 @@ public class Assign implements ASTNode {
     }
 
     @Override
-    public void accept(NodeVisitor visitor) {
-        visitor.visitAssign(this);
-    }
-
-    @Override
     public String getValue() {
         return value;
     }
 
+    @Override
     public ASTNode getLeft() {
         return left;
     }
 
+    @Override
     public ASTNode getRight() {
         return right;
+    }
+
+    @Override
+    public void accept(NodeVisitor visitor) {
+        visitor.visitAssign(this);
     }
 }
