@@ -14,8 +14,8 @@ public class BinaryOperation implements NonTerminalNode {
     private final ASTNode right;
 
     public BinaryOperation(Token token, ASTNode left, ASTNode right) {
-        this.left = left;
         this.token = token;
+        this.left = left;
         this.right = right;
     }
 
@@ -24,18 +24,16 @@ public class BinaryOperation implements NonTerminalNode {
         return token;
     }
 
-    @Override
     public ASTNode getLeft() {
         return left;
     }
 
-    @Override
     public ASTNode getRight() {
         return right;
     }
 
     @Override
-    public Integer accept(NodeVisitor visitor) {
-        return visitor.visitBinaryOperation(this);
+    public void accept(NodeVisitor visitor) {
+        visitor.visitBinaryOperation(this);
     }
 }

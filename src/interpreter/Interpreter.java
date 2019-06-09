@@ -1,8 +1,11 @@
 package interpreter;
 
-import parser.ASTNode;
-import parser.BinaryOperation;
+import parser.*;
 import parser.Number;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
 
 import static lexer.Kind.*;
 
@@ -12,25 +15,81 @@ import static lexer.Kind.*;
  */
 public class Interpreter implements NodeVisitor {
 
-    public Integer interpret(ASTNode node) {
-        return node.accept(this);
+    private final Map<String, Integer> symbolTable = new HashMap<>();
+    private final Stack<Integer> operations = new Stack<>();
+
+    public Map<String, Integer> interpret(ASTNode node) {
+        node.accept(this);
+        return symbolTable;
     }
 
     @Override
-    public Integer visitNumber(Number node) {
-        return Integer.valueOf(node.getValue());
+    public void visitNumber(Number node) {
+
+        operations.push(Integer.valueOf(node.getValue()));
     }
 
     @Override
-    public Integer visitBinaryOperation(BinaryOperation node) {
+    public void visitBinaryOperation(BinaryOperation node) {
+
         if (node.getToken().getKind().equals(PLUS)) {
-            return node.getLeft().accept(this) + node.getRight().accept(this);
+            node.getLeft().accept(this);
+            node.getRight().accept(this);
+            final Integer val1 = operations.pop();
+            final Integer val2 = operations.pop();
+            operations.push(val2 + val1);
         } else if (node.getToken().getKind().equals(MINUS)) {
-            return node.getLeft().accept(this) - node.getRight().accept(this);
+            node.getLeft().accept(this);
+            node.getRight().accept(this);
+            final Integer val1 = operations.pop();
+            final Integer val2 = operations.pop();
+            operations.push(val2 - val1);
         } else if (node.getToken().getKind().equals(MUL)) {
-            return node.getLeft().accept(this) * node.getRight().accept(this);
+            node.getLeft().accept(this);
+            node.getRight().accept(this);
+            final Integer val1 = operations.pop();
+            final Integer val2 = operations.pop();
+            operations.push(val2 * val1);
         } else {
-            return node.getLeft().accept(this) / node.getRight().accept(this);
+            node.getLeft().accept(this);
+            node.getRight().accept(this);
+            final Integer val1 = operations.pop();
+            final Integer val2 = operations.pop();
+            operations.push(val2 / val1);
         }
+    }
+
+    public Stack<Integer> getOperations() {
+        return operations;
+    }
+
+    @Override
+    public void visitCompound(Compound node) {
+
+        node.getChildren().forEach(children -> children.accept(this));
+    }
+
+    @Override
+    public void visitAssign(Assign node) {
+
+        final String varName = node.getLeft().getToken().getValue();
+        node.getRight().accept(this);
+        symbolTable.put(varName, operations.pop());
+    }
+
+    @Override
+    public void visitDeclaration(Declaration node) {
+
+        final String varName = node.getValue();
+        symbolTable.put(varName, null);
+    }
+
+    @Override
+    public void visitVar(Var node) {
+
+        final String varName = node.getValue();
+        final Integer val = symbolTable.get(varName);
+        if (val != null) operations.push(val);
+        else throw new RuntimeException("Undeclared variable");
     }
 }

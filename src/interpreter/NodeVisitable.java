@@ -6,5 +6,5 @@ package interpreter;
  */
 public interface NodeVisitable {
 
-    Integer accept(NodeVisitor visitor);
+    void accept(NodeVisitor visitor);
 }

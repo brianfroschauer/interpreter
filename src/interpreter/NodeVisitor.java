@@ -1,6 +1,6 @@
 package interpreter;
 
-import parser.BinaryOperation;
+import parser.*;
 import parser.Number;
 
 /**
@@ -9,6 +9,10 @@ import parser.Number;
  */
 public interface NodeVisitor {
 
-    Integer visitNumber(Number node);
-    Integer visitBinaryOperation(BinaryOperation node);
+    void visitNumber(Number node);
+    void visitBinaryOperation(BinaryOperation node);
+    void visitCompound(Compound node);
+    void visitAssign(Assign node);
+    void visitDeclaration(Declaration node);
+    void visitVar(Var node);
 }

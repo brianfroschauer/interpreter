@@ -5,7 +5,8 @@ import parser.ASTNode;
 import parser.Parser;
 
 import java.util.List;
-import java.util.Scanner;
+import java.util.Map;
+
 
 /**
  * Author: brianfroschauer
@@ -15,37 +16,12 @@ public class Main {
 
     public static void main(String[] args) {
 
-        do {
+        final Lexer lexer = new Lexer();
+        final Parser parser = new Parser();
+        final Interpreter interpreter = new Interpreter();
 
-            final Lexer lexer = new Lexer();
-            final Parser parser = new Parser();
-            final Interpreter interpreter = new Interpreter();
-
-            System.out.print("> ");
-
-            final String input = new Scanner(System.in).nextLine();
-
-            if (input.equals("exit")) break;
-            if (input.equals("")) continue;
-            if (input.equals("clear")) {
-                System.out.print("\033[H\033[2J");
-                System.out.flush();
-                continue;
-            }
-
-            Integer result = null;
-
-            try {
-                final List<Token> tokens = lexer.tokenize(input);
-                final ASTNode tree = parser.parse(tokens);
-                result = interpreter.interpret(tree);
-            } catch (RuntimeException e) {
-                System.out.println(e.getMessage());
-            }
-
-            if (result != null) {
-                System.out.println(result);
-            }
-        } while (true);
+        final List<Token> tokens = lexer.tokenize("let var1; var1 = 2 * (5 - 1); var2 = var1 - 5 * (2 - 3);");
+        final ASTNode ast = parser.parse(tokens);
+        final Map<String, Integer> table = interpreter.interpret(ast);
     }
 }

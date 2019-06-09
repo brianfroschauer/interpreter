@@ -21,21 +21,19 @@ public class Assign implements NonTerminalNode {
 
     @Override
     public Token getToken() {
-        return null;
+        return token;
     }
 
-    @Override
     public ASTNode getLeft() {
-        return null;
+        return left;
     }
 
-    @Override
     public ASTNode getRight() {
-        return null;
+        return right;
     }
 
     @Override
-    public Integer accept(NodeVisitor visitor) {
-        return null;
+    public void accept(NodeVisitor visitor) {
+        visitor.visitAssign(this);
     }
 }

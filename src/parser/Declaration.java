@@ -5,21 +5,21 @@ import lexer.Token;
 
 /**
  * Author: brianfroschauer
- * Date: 2019-06-06
+ * Date: 2019-06-08
  */
-public class Number implements TerminalNode {
+public class Declaration implements TerminalNode {
 
     private final Token token;
-    private final String value;
+    private final ASTNode var;
 
-    public Number(Token token, String value) {
+    public Declaration(Token token, ASTNode var) {
         this.token = token;
-        this.value = value;
+        this.var = var;
     }
 
     @Override
     public String getValue() {
-        return value;
+        return var.getToken().getValue();
     }
 
     @Override
@@ -29,6 +29,6 @@ public class Number implements TerminalNode {
 
     @Override
     public void accept(NodeVisitor visitor) {
-        visitor.visitNumber(this);
+        visitor.visitDeclaration(this);
     }
 }

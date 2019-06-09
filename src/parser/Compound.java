@@ -3,19 +3,18 @@ package parser;
 import interpreter.NodeVisitor;
 import lexer.Token;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Author: brianfroschauer
  * Date: 2019-06-07
  */
-public class Compound implements ASTNode {
+public class Compound implements NonTerminalNode {
 
-    List<ASTNode> children = new ArrayList<>();
+    private final List<ASTNode> children;
 
-    public void addChildren(ASTNode node) {
-        children.add(node);
+    public Compound(List<ASTNode> children) {
+        this.children = children;
     }
 
     public List<ASTNode> getChildren() {
@@ -23,12 +22,12 @@ public class Compound implements ASTNode {
     }
 
     @Override
-    public Integer accept(NodeVisitor visitor) {
+    public Token getToken() {
         return null;
     }
 
     @Override
-    public Token getToken() {
-        return null;
+    public void accept(NodeVisitor visitor) {
+        visitor.visitCompound(this);
     }
 }

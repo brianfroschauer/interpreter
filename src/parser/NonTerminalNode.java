@@ -6,6 +6,4 @@ package parser;
  */
 public interface NonTerminalNode extends ASTNode {
 
-    ASTNode getLeft();
-    ASTNode getRight();
 }
