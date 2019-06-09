@@ -21,6 +21,6 @@ public class StringLiteral implements ASTNode {
 
     @Override
     public void accept(NodeVisitor visitor) {
-
+        visitor.visitString(this);
     }
 }

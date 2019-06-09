@@ -12,7 +12,7 @@ import java.util.Stack;
 public class InterpreterImpl implements Interpreter, NodeVisitor {
 
     private final SymbolTable symbolTable = new SymbolTable();
-    private final Stack<Integer> stack = new Stack<>();
+    private final Stack<Symbol> stack = new Stack<>();
 
     @Override
     public void interpret(ASTNode node) {
@@ -39,7 +39,7 @@ public class InterpreterImpl implements Interpreter, NodeVisitor {
     @Override
     public void visitDeclaration(Declaration node) {
 
-        final String varName = node.getValue();
+        final String varName = node.getLeft().getValue();
         symbolTable.define(varName, null);
     }
 
@@ -47,75 +47,93 @@ public class InterpreterImpl implements Interpreter, NodeVisitor {
     public void visitVariable(Variable node) {
 
         final String varName = node.getValue();
-        final Integer val = symbolTable.lookup(varName);
-        if (val != null) stack.push(val);
+        final Symbol value = symbolTable.lookup(varName);
+        if (value != null) stack.push(value);
         else throw new RuntimeException("Null pointer exception: " + varName);
     }
 
     @Override
     public void visitBinaryOperation(BinaryOperation node) {
 
-        switch (node.getValue()) {
-            case "PLUS": {
-                evaluatePlus(node);
-                break;
+        try {
+            switch (node.getValue()) {
+                case "PLUS": {
+                    evaluatePlus(node);
+                    break;
+                }
+                case "MINUS": {
+                    evaluateMinus(node);
+                    break;
+                }
+                case "MUL": {
+                    evaluateMul(node);
+                    break;
+                }
+                default: {
+                    evaluateDiv(node);
+                    break;
+                }
             }
-            case "MINUS": {
-                evaluateMinus(node);
-                break;
-            }
-            case "MUL": {
-                evaluateMul(node);
-                break;
-            }
-            default: {
-                evaluateDiv(node);
-                break;
-            }
+        } catch (ClassCastException e) {
+            throw new RuntimeException("Incompatible types");
         }
     }
 
     @Override
     public void visitNumber(NumberLiteral node) {
 
-        stack.push(Integer.valueOf(node.getValue()));
+        stack.push(new Symbol<>("number", Integer.valueOf(node.getValue())));
+    }
+
+    @Override
+    public void visitString(StringLiteral node) {
+
+        stack.push(new Symbol<>("string", node.getValue()));
     }
 
     @Override
     public void visitPrint(Print node) {
+
         node.getNode().accept(this);
-        System.out.println(stack.pop());
+        System.out.println(stack.pop().getValue());
     }
 
     private void evaluatePlus(BinaryOperation node) {
         node.getLeft().accept(this);
         node.getRight().accept(this);
-        final Integer val1 = stack.pop();
-        final Integer val2 = stack.pop();
-        stack.push(val2 + val1);
+
+        if (stack.peek().getType().equals("number")) {
+            final Integer val1 = (Integer) stack.pop().getValue();
+            final Integer val2 = (Integer) stack.pop().getValue();
+            stack.push(new Symbol<>("number", val2 + val1));
+        } else {
+            final String val1 = (String) stack.pop().getValue();
+            final String val2 = (String) stack.pop().getValue();
+            stack.push(new Symbol<>("string", val2.concat(val1)));
+        }
     }
 
     private void evaluateMinus(BinaryOperation node) {
         node.getLeft().accept(this);
         node.getRight().accept(this);
-        final Integer val1 = stack.pop();
-        final Integer val2 = stack.pop();
-        stack.push(val2 - val1);
+        final Integer val1 = (Integer) stack.pop().getValue();
+        final Integer val2 = (Integer) stack.pop().getValue();
+        stack.push(new Symbol<>("number", val2 - val1));
     }
 
     private void evaluateMul(BinaryOperation node) {
         node.getLeft().accept(this);
         node.getRight().accept(this);
-        final Integer val1 = stack.pop();
-        final Integer val2 = stack.pop();
-        stack.push(val2 * val1);
+        final Integer val1 = (Integer) stack.pop().getValue();
+        final Integer val2 = (Integer) stack.pop().getValue();
+        stack.push(new Symbol<>("number", val2 * val1));
     }
 
     private void evaluateDiv(BinaryOperation node) {
         node.getLeft().accept(this);
         node.getRight().accept(this);
-        final Integer val1 = stack.pop();
-        final Integer val2 = stack.pop();
-        stack.push(val2 / val1);
+        final Integer val1 = (Integer) stack.pop().getValue();
+        final Integer val2 = (Integer) stack.pop().getValue();
+        stack.push(new Symbol<>("number", val2 / val1));
     }
 }

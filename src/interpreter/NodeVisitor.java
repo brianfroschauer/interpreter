@@ -15,5 +15,6 @@ public interface NodeVisitor {
     void visitVariable(Variable node);
     void visitBinaryOperation(BinaryOperation node);
     void visitNumber(NumberLiteral node);
+    void visitString(StringLiteral node);
     void visitPrint(Print node);
 }

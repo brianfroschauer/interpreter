@@ -6,6 +6,7 @@ import parser.nodes.*;
 import parser.nodes.NumberLiteral;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -20,6 +21,8 @@ public class ParserImpl implements Parser {
     private Iterator<Token> iterator;
     private Token current;
 
+    private HashMap<String, String> types = new HashMap<>();
+
     public ASTNode parse(List<Token> tokens) {
         iterator = tokens.iterator();
         current = iterator.next();
@@ -27,7 +30,7 @@ public class ParserImpl implements Parser {
     }
 
     /**
-     * program: statement_list
+     * program = statement_list
      */
     private ASTNode program() {
         
@@ -37,7 +40,7 @@ public class ParserImpl implements Parser {
     }
 
     /**
-     * statement_list: statement SEMICOLON | statement SEMICOLON statement_list
+     * statement_list = statement SEMICOLON | statement SEMICOLON statement_list
      */
     private List<ASTNode> statementList() {
 
@@ -58,7 +61,7 @@ public class ParserImpl implements Parser {
     }
 
     /**
-     * statement: declaration_statement | print_statement | assignment_statement
+     * statement = declaration_statement | print_statement | assignment_statement
      */
     private ASTNode statement() {
 
@@ -75,13 +78,21 @@ public class ParserImpl implements Parser {
     }
 
     /**
-     * declaration_statement: LET variable
+     * declaration_statement = LET variable COLON type
      */
     private Declaration declarationStatement() {
 
         eat(LET);
 
-        return new Declaration(variable().getValue());
+        final Variable variable = variable();
+
+        eat(COLON);
+
+        final Type type = type();
+
+        types.put(variable.getValue(), type.getValue());
+
+        return new Declaration(variable, type);
     }
 
     /**
@@ -101,11 +112,13 @@ public class ParserImpl implements Parser {
     }
 
     /**
-     * assignment_statement: variable ASSIGN expression
+     * assignment_statement = variable ASSIGN expression
      */
     private Assignation assignmentStatement() {
 
         final Variable variable = variable();
+
+        final Token current = this.current;
 
         eat(ASSIGN);
 
@@ -115,16 +128,64 @@ public class ParserImpl implements Parser {
     }
 
     /**
-     * expression: term ((PLUS | MINUS) term)*
-     * term: factor ((MUL | DIV) factor)*
-     * factor: NUMBER_LITERAL | LPAREN expression RPAREN
+     * expression = number_expression | string_expression
      */
     private ASTNode expression() {
+
+        if (current.getKind().equals(NUMBER_LITERAL)) {
+            return numberExpression();
+        } else if (current.getKind().equals(STRING_LITERAL)) {
+            return stringExpression();
+        } else {
+            final String type = types.get(current.getValue());
+            if (type.equals("number")) return numberExpression();
+            else return stringExpression();
+        }
+    }
+
+    /**
+     * string_expression = string_term (PLUS string_expression)*
+     */
+    private ASTNode stringExpression() {
+
+        ASTNode node = stringTerm();
+
+        while (current.getKind().equals(PLUS)) {
+            final Token current = this.current;
+            eat(PLUS);
+            node = new BinaryOperation(current.getKind().name(), node, stringExpression());
+        }
+
+        return node;
+    }
+
+    /**
+     * string_term = STRING_LITERAL | string_expression | variable
+     */
+    private ASTNode stringTerm() {
+
+        if (current.getKind().equals(STRING_LITERAL)) {
+            final Token current = this.current;
+            eat(STRING_LITERAL);
+            return new StringLiteral(current.getValue());
+        } else if (current.getKind().equals(ID)) {
+            return variable();
+        } else {
+            return expression();
+        }
+    }
+
+    /**
+     * number_expression = term ((PLUS | MINUS) term)*
+     * term = factor ((MUL | DIV) factor)*
+     * factor = NUMBER_LITERAL | LPAREN number_expression RPAREN
+     */
+    private ASTNode numberExpression() {
 
         ASTNode node = term();
 
         while (current.getKind().equals(PLUS) || current.getKind().equals(MINUS)) {
-            Token current = this.current;
+            final Token current = this.current;
             if (current.getKind().equals(PLUS)) {
                 eat(PLUS);
             } else {
@@ -136,7 +197,7 @@ public class ParserImpl implements Parser {
     }
 
     /**
-     * term: factor ((MUL | DIV) factor)*
+     * term = factor ((MUL | DIV) factor)*
      */
     private ASTNode term() {
 
@@ -156,7 +217,7 @@ public class ParserImpl implements Parser {
     }
 
     /**
-     * factor: NUMBER_LITERAL | LPAREN expression RPAREN | variable
+     * factor = NUMBER_LITERAL | LPAREN number_expression RPAREN | variable
      */
     private ASTNode factor() {
 
@@ -167,7 +228,7 @@ public class ParserImpl implements Parser {
             return new NumberLiteral(token.getValue());
         } else if (token.getKind().equals(LPAREN)) {
             eat(LPAREN);
-            ASTNode node = expression();
+            ASTNode node = numberExpression();
             eat(RPAREN);
             return node;
         } else {
@@ -176,7 +237,25 @@ public class ParserImpl implements Parser {
     }
 
     /**
-     *  variable: ID
+     * type = NUMBER_DATATYPE | STRING_DATATYPE
+     */
+    private Type type() {
+
+        final Type type;
+
+        if (current.getKind().equals(NUMBER_DATATYPE)) {
+            eat(NUMBER_DATATYPE);
+            type = new Type("number");
+        } else {
+            eat(STRING_DATATYPE);
+            type = new Type("string");
+        }
+
+        return type;
+    }
+
+    /**
+     *  variable = ID
      */
     private Variable variable() {
 
@@ -192,7 +271,7 @@ public class ParserImpl implements Parser {
         if (current.getKind().equals(kind)) {
             current = iterator.next();
         } else {
-            throw new RuntimeException("Invalid syntax");
+            throw new RuntimeException("Invalid syntax, expected: " + kind.name());
         }
     }
 }
