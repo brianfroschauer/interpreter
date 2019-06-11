@@ -21,6 +21,7 @@ public class LexerAdapter implements Lexer {
         return tokens
                 .stream()
                 .map(token -> new TokenAdapter(token))
-                .filter(token -> token.getKind() != null).collect(Collectors.toList());
+                .filter(token -> token.getKind() != null)
+                .collect(Collectors.toList());
     }
 }
